@@ -31,12 +31,17 @@ class dictory
 
         $this->redis = new Redis();
         $this->redis->connect("redis");
+
+        if(!is_dir($this->audioFolder)) {
+            mkdir($this->audioFolder);
+        }
+
+
     }
 
 
-    public function getWord(string $word): string
+    public function getWord(string $word): ?string
     {
-
         $word = trim($word);
 
         if ($response = $this->wordExist($word)) {
@@ -53,10 +58,11 @@ class dictory
             "ants" => $thesaurus['ants'],
             "dictionary" => $dictionary['definition'],
         ];
-
-        $this->putCache($def);
-
-        return json_encode($def);
+        
+        if ($phonetics) {
+            $this->putCache($def);
+            return json_encode($def);
+        }
     }
 
     public function getWordTest(string $word)
