@@ -1,0 +1,22 @@
+services:
+  http:
+    tty: true
+    stdin_open: true
+    build: docker/php
+    container_name: vocabulary
+    ports: 
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - ./app:/var/www/html
+  
+  redis:
+    image: redis:latest
+    volumes:
+      - redis_data:/data  # 定义卷的挂载点
+    ports:
+      - "6379:6379"       # 公开 Redis 的默认端口
+
+volumes:
+  redis_data:
+    driver: local         # 使用默认的本地驱动
