@@ -51,18 +51,19 @@ class dictory
         $thesaurus = $this->getThesaurus($word);
         $dictionary = $this->getDictionary($word);
 
-        $def = [
-            "word" => $word,
-            "phonetics" => $phonetics,
-            "syns" => $thesaurus['syns'],
-            "ants" => $thesaurus['ants'],
-            "dictionary" => $dictionary['definition'],
-        ];
-        
-        if ($phonetics) {
+        if (!$thesaurus) {
+            $def = '';
+        } else {
+            $def = [
+                "word" => $word,
+                "phonetics" => $phonetics,
+                "syns" => $thesaurus['syns'],
+                "ants" => $thesaurus['ants'],
+                "dictionary" => $dictionary['definition'],
+            ];
             $this->putCache($def);
-            return json_encode($def);
         }
+        return json_encode($def);
     }
 
     public function getWordTest(string $word)
@@ -132,6 +133,10 @@ class dictory
         curl_setopt($this->curl, CURLOPT_URL, $this->thesaurusUrl . $word . $this->thesaurusKey); // 不包括头部信息
         $response = $this->getResponse();
         $response = json_decode($response, true)[0];
+
+        if (empty($response['meta']['syns'][0])) {
+            return false;
+        }
 
         return [
             "syns" => $response['meta']['syns'][0] ?? '',
@@ -222,13 +227,23 @@ class dictory
             while (($line = fgets($fileHandle)) !== false) {
                 // Remove any extra whitespace, including new lines
                 $line = trim($line);
-                echo "<h1>$line</h1>";
+                echo "Inprogress....$line\r\n ";
                 // Process the line (e.g., print it)
                 $word = $this->getWord($line);
                 // echo "<p>";
                 // echo  json_encode($word);
                 // echo "</p>";
             }
+
+            echo "***********************************\r\n";
+            echo "***** Initialization completed ****\r\n";
+            echo "**********Ready to use NOW*********\r\n";
+            echo "***********************************\r\n";
+            echo "\r\n\r\n";
+            echo "***********************************\r\n";
+            echo "************** READY *************\r\n";
+            echo "***********************************\r\n";
+            echo "***********************************\r\n";
 
             // Close the file
             fclose($fileHandle);
