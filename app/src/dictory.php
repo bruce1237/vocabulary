@@ -127,7 +127,7 @@ class dictory
         return $phonetics ? $this->parsePhonetics($phonetics) : '';
     }
 
-    protected function getThesaurus(string $word): array
+    protected function getThesaurus(string $word): array|false
     {
 
         curl_setopt($this->curl, CURLOPT_URL, $this->thesaurusUrl . $word . $this->thesaurusKey); // 不包括头部信息
